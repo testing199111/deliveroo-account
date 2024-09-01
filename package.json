@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "axios": "^1.7.5",
+    "dotenv": "^16.4.5",
+    "puppeteer": "^23.2.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-adblocker": "^2.13.6",
+    "puppeteer-extra-plugin-recaptcha": "^3.6.8",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "user-agents": "^1.1.312"
+  },
+  "devDependencies": {
+    "@types/user-agents": "^1.0.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "scripts": {
+    "start": "npx ts-node src/index.ts",
+    "build": "tsc",
+    "serve": "node dist/index.js"
+  }
+}
