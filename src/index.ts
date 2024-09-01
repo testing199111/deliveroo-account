@@ -18,6 +18,7 @@ const connectionStatus = {
   verifyCode: false,
   createAccount: false,
   redeemCoupon: false,
+  recaptchaDetected: false,
 };
 
 const accountDetails = {
@@ -118,7 +119,7 @@ const createAccount = async () => {
           waitUntil: "networkidle2",
         });
         console.log("Navigation complete.");
-  
+
         // const content = await page.content();
         // console.log('Current page content:', content);
 
@@ -134,6 +135,9 @@ const createAccount = async () => {
         } catch (error) {
           console.error("Next page did not load within the timeout period.");
         }
+
+        // Wait for the "Continue with email" button to be available
+        await new Promise((r) => setTimeout(r, 5000));
   
         console.log('Clicking "Continue with email" button...');
         await page.click("#continue-with-email");
@@ -145,8 +149,7 @@ const createAccount = async () => {
         await page.click('button[type="submit"]');
         console.log('"Continue" button clicked.');
 
-        // throw Error("Test Error")
-  
+        
         try {
           await page.waitForSelector('input[name="phone_number"]', {
             timeout: 10000,
@@ -155,7 +158,9 @@ const createAccount = async () => {
         } catch (error) {
           console.error("Next page did not load within the timeout period.");
         }
-  
+        
+        // throw Error("Test Error")
+
         const phoneNumberData = await smsActivateApi.requestPhoneNumber();
         accountDetails.phoneNumberId = phoneNumberData.id;
         accountDetails.phoneNumber =
