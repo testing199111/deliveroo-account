@@ -1,4 +1,4 @@
-const generateRandomEmail = require("./helper");
+const generateRandomString = require("./helper");
 const smsActivateApi = require("./sms-activate/api");
 const smsActivate = require("./sms-activate/index.ts");
 
@@ -21,9 +21,11 @@ const connectionStatus = {
   recaptchaDetected: false,
 };
 
+const randomString = generateRandomString();
+
 const accountDetails = {
-  email: generateRandomEmail(),
-  password: process.env.PASSWORD || "12345678",
+  email: randomString,
+  password: randomString,
   firstName: process.env.FIRST_NAME || "John",
   lastName: process.env.LAST_NAME || "Don",
   phoneNumberId: "",

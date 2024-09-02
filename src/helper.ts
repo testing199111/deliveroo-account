@@ -1,10 +1,8 @@
-export const generateRandomEmail = (): string => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz';
-  let email = '';
-  for (let i = 0; i < 5; i++) {
-    email += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return `${email}@gmail.com`;
+import dayjs from 'dayjs';
+
+export const generateRandomString = (): string => {
+  const time = dayjs().format("MMDDHHmm");
+  return `${process.env.PREFIX}${time}@gmail.com`;
 };
 
-module.exports = generateRandomEmail;
+module.exports = generateRandomString;
