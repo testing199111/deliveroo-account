@@ -12,7 +12,12 @@ const UserAgent = require("user-agents");
 const dotenv = require("dotenv");
 dotenv.config();
 
-puppeteer.use(StealthPlugin());
+const stealth = StealthPlugin();
+// stealth.enabledEvasions.delete("iframe.contentWindow");
+// stealth.enabledEvasions.delete("media.codecs");
+// stealth.enabledEvasions.delete("user-agent-override");
+
+puppeteer.use(stealth);
 puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 
 const connectionStatus = {
@@ -43,6 +48,13 @@ const createAccount = async () => {
     .launch({
       headless: false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      executablePath:
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      //https://github.com/berstend/puppeteer-extra/issues/908
+      // If you use Windows, set here
+      //   executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      // For linux
+      //   executablePath: '/usr/bin/google-chrome',
     })
     .then(async (browser: any) => {
       let page;
@@ -162,7 +174,7 @@ const createAccount = async () => {
           console.error("Next page did not load within the timeout period.");
         }
 
-        // throw Error("Test Error")
+        // throw Error("Test Error");
 
         const phoneNumberData = await smsActivateApi.requestPhoneNumber();
         accountDetails.phoneNumberId = phoneNumberData.id;
@@ -233,7 +245,7 @@ const createAccount = async () => {
         });
         console.log('"Verify" button clicked.');
 
-        await new Promise((r) => setTimeout(r, 8000));
+        await new Promise((r) => setTimeout(r, 6000));
 
         if (connectionStatus.verifyCode) {
           console.log("sms code verification successfully.");
@@ -265,7 +277,7 @@ const createAccount = async () => {
 
         console.log('"Create account" button clicked.');
 
-        await new Promise((r) => setTimeout(r, 8000));
+        await new Promise((r) => setTimeout(r, 6000));
 
         if (connectionStatus.createAccount) {
           console.log("Created Account");
