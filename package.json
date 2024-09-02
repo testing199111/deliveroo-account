@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@slack/web-api": "^7.3.4",
     "axios": "^1.7.5",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
