@@ -15,7 +15,7 @@ export const sendfullAccountDetails = async (accountDetail: any) => {
       fields: [
         {
           type: "mrkdwn",
-          text: `Date: ${new Date().toDateString()}`,
+          text: `Date: ${dayjs().format('MMM DD YYYY HH:mm:ss')}`,
         },
         {
           type: "mrkdwn",
