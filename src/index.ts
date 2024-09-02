@@ -21,9 +21,11 @@ const connectionStatus = {
   recaptchaDetected: false,
 };
 
+const randomString = generateRandomString();
+
 const accountDetails = {
-  email: generateRandomString(),
-  password: generateRandomString(),
+  email: randomString,
+  password: randomString,
   firstName: process.env.FIRST_NAME || "John",
   lastName: process.env.LAST_NAME || "Don",
   phoneNumberId: "",
