@@ -10,6 +10,7 @@ SMS_COUNTRY=52
 SLACK_SEND=false
 SLACK_TOKEN=
 SLACK_CHANNEL_ID=
+CONSOLE_LOG=false
 
 ---------------------------------
 

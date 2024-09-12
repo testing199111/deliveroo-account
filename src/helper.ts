@@ -5,4 +5,9 @@ export const generateRandomString = (): string => {
   return `${process.env.PREFIX}${time}@gmail.com`;
 };
 
-module.exports = generateRandomString;
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+module.exports = {
+  generateRandomString,
+  delay
+};
