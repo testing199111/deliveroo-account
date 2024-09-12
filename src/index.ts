@@ -1,6 +1,6 @@
 const slackUtils = require("./slack/index.ts");
 
-const generateRandomString = require("./helper");
+const { generateRandomString, delay } = require("./helper");
 const smsActivateApi = require("./sms-activate/api");
 const smsActivate = require("./sms-activate/index.ts");
 
@@ -47,6 +47,7 @@ const createAccount = async () => {
   puppeteer
     .launch({
       headless: false,
+      // slowMo: 250,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       executablePath:
         "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -64,6 +65,11 @@ const createAccount = async () => {
         page = await browser.newPage();
         await page.setViewport({ width: 1920, height: 1080 });
         console.log("New page opened.");
+
+        if (process.env.CONSOLE_LOG === "true") {
+          // @ts-ignore
+          page.on("console", (msg) => console.log("PAGE LOG:", msg.text()));
+        }
 
         page.on("response", async (response: any) => {
           // console.log("Response URL:", response.url());
@@ -153,7 +159,7 @@ const createAccount = async () => {
         }
 
         // Wait for the "Continue with email" button to be available
-        await new Promise((r) => setTimeout(r, 5000));
+        await delay(3000);
 
         console.log('Clicking "Continue with email" button...');
         await page.click("#continue-with-email");
@@ -176,7 +182,8 @@ const createAccount = async () => {
 
         // throw Error("Test Error");
 
-        const phoneNumberData = await smsActivateApi.requestPhoneNumber();
+        console.log("Requesting phone number");
+        const phoneNumberData = await smsActivate.requestPhoneNumberWithDelay();
         accountDetails.phoneNumberId = phoneNumberData.id;
         accountDetails.phoneNumber =
           accountDetails.phoneNumber + phoneNumberData.phoneNumber;
@@ -207,7 +214,7 @@ const createAccount = async () => {
         });
         console.log('"Send verification code" button clicked.');
 
-        await new Promise((r) => setTimeout(r, 5000));
+        await delay(5000);
 
         if (connectionStatus.sentVerificationCode) {
           console.log("Verification code sent successfully.");
@@ -245,7 +252,7 @@ const createAccount = async () => {
         });
         console.log('"Verify" button clicked.');
 
-        await new Promise((r) => setTimeout(r, 6000));
+        await delay(6000);
 
         if (connectionStatus.verifyCode) {
           console.log("sms code verification successfully.");
@@ -277,7 +284,7 @@ const createAccount = async () => {
 
         console.log('"Create account" button clicked.');
 
-        await new Promise((r) => setTimeout(r, 6000));
+        await delay(6000);
 
         if (connectionStatus.createAccount) {
           console.log("Created Account");
@@ -314,7 +321,7 @@ const createAccount = async () => {
 
         console.log('"Submit account" button clicked.');
 
-        await new Promise((r) => setTimeout(r, 5000));
+        await delay(5000);
 
         if (connectionStatus.redeemCoupon) {
           console.log("Redeem Coupon Successfully");
