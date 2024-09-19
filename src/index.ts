@@ -86,6 +86,7 @@ const createAccount = async () => {
               console.log("Response body:", responseBody);
               if (status === 200) {
                 connectionStatus.sentVerificationCode = true;
+                console.log("sentVerificationCode set to true": connectionStatus.sentVerificationCode);
               }
             }
 
@@ -97,6 +98,7 @@ const createAccount = async () => {
               console.log("Response body:", responseBody);
               if (status === 200) {
                 connectionStatus.verifyCode = true;
+                console.log("verifyCode set to true": connectionStatus.verifyCode);
               }
             }
 
@@ -112,6 +114,7 @@ const createAccount = async () => {
               console.log("Response body:", response);
               if (status === 200 || status === 201) {
                 connectionStatus.createAccount = true;
+                console.log("createAccount set to true": connectionStatus.createAccount);
               }
             }
 
@@ -126,6 +129,7 @@ const createAccount = async () => {
               console.log("Response body:", responseBody);
               if (status === 200 || status === 201) {
                 connectionStatus.redeemCoupon = true;
+                console.log("redeemCoupon set to true": connectionStatus.redeemCoupon);
               }
             }
           } catch (error) {
@@ -216,6 +220,7 @@ const createAccount = async () => {
 
         await delay(5000);
 
+        console.log("Checking sentVerificationCode": connectionStatus.sentVerificationCode);
         if (connectionStatus.sentVerificationCode) {
           console.log("Verification code sent successfully.");
           // Proceed with the next steps
@@ -254,6 +259,7 @@ const createAccount = async () => {
 
         await delay(6000);
 
+        console.log("Checking verifyCode": connectionStatus.verifyCode);
         if (connectionStatus.verifyCode) {
           console.log("sms code verification successfully.");
           // Proceed with the next steps
@@ -286,6 +292,7 @@ const createAccount = async () => {
 
         await delay(6000);
 
+        console.log("Checking createAccount": connectionStatus.createAccount);
         if (connectionStatus.createAccount) {
           console.log("Created Account");
         } else {
@@ -323,6 +330,7 @@ const createAccount = async () => {
 
         await delay(5000);
 
+        console.log("Checking redeemCoupon": connectionStatus.redeemCoupon);
         if (connectionStatus.redeemCoupon) {
           console.log("Redeem Coupon Successfully");
           if (process.env.SLACK_SEND === "true") {
