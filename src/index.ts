@@ -333,12 +333,12 @@ const createAccount = async () => {
         console.log("Checking redeemCoupon:", connectionStatus.redeemCoupon);
         if (connectionStatus.redeemCoupon) {
           console.log("Redeem Coupon Successfully");
-          if (process.env.SLACK_SEND === "true") {
-            await slackUtils.sendfullAccountDetails(accountDetails);
-            console.log("Account detail sent to slack");
-          }
         } else {
           throw Error("Failed to redeem coupon.");
+        }
+        if (process.env.CREATE_ADDRESS === "true") {
+          await updateAddress(page);
+          console.log("Address updated successfully");
         }
       } catch (error) {
         throw Error(error as any);
@@ -347,10 +347,128 @@ const createAccount = async () => {
           path: "final.png",
         });
         console.log("screenshot captured");
+        if (process.env.SLACK_SEND === "true" && connectionStatus.redeemCoupon) {
+          await slackUtils.sendfullAccountDetails(accountDetails);
+          console.log("Account detail sent to slack");
+        }
         await browser.close();
         console.log("Browser closed.");
       }
     });
 };
+
+const updateAddress = async (page: any) => {
+  await page.setRequestInterception(true);
+
+  page.on('request', (request: any) => {
+    if (request.url().endsWith('addresses?market=hk') ) {
+        console.log("request url", request.url());
+        console.log("process.env.ADDRESS_DATA", process.env.ADDRESS_DATA);
+        request.continue({
+            postData: process.env.ADDRESS_DATA,
+        });
+    } else {
+        request.continue(); // Continue with other requests as normal
+    }
+  });
+
+  await page.goto("https://deliveroo.hk/en/account?locale=en", {
+    waitUntil: "networkidle2",
+  });
+
+  await page.click('svg path[d="M11 11H4V13H11V20H13V13H20V11H13V4H11V11Z"]');
+  await page.waitForSelector('input[name="search"]', {
+    timeout: 10000,
+  });
+  await page.type(
+    'input[name="search"]',
+    "hong kong"
+  );
+  await delay(5000);
+  await page.evaluate(() => {
+    const p = Array.from(document.querySelectorAll("p"));
+    const addAddressManuallyButton = p.find((p) =>
+      p?.textContent?.includes("Add address manually...")
+    );
+    if (addAddressManuallyButton) {
+      console.log('"addAddressManuallyButton" button is enabled.');
+      addAddressManuallyButton.click();
+    }
+  });
+
+  try {
+    await page.waitForSelector('input[name="Apartment and floor number"]', {
+      timeout: 10000,
+    });
+    console.log("Next page loaded. (enter address)");
+  } catch (error) {
+    console.error("Next page did not load within the timeout period.");
+  }
+
+  await page.type('input[name="Apartment and floor number"]', "123");
+        console.log("Apartment and floor number entered into the input field.");
+  await page.type('input[name="Block"]', "123");
+        console.log("Block entered into the input field.");
+  await page.type('input[name="Building or house name"]', "123");
+        console.log("Building or house name entered into the input field.");
+  await page.type('input[name="Street number"]', "123");
+        console.log("Street number entered into the input field.");
+  await page.type('input[name="Street name "]', "123");
+        console.log("Street name entered into the input field.");
+  await page.type('input[name="District"]', "New Territories Festival City");
+        console.log("District entered into the input field.");
+  await page.type('input[name="Phone number"]', "96542323");
+        console.log("Phone number entered into the input field.");
+
+  await delay(5000);
+
+  await page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll("button"));
+    const confirmAddressButton = buttons.find((button) =>
+      button?.textContent?.includes("Confirm address")
+    );
+    if (!confirmAddressButton) {
+      throw Error("Confirm address button not found.");
+    }
+    console.log('"Confirm address" button is enabled.');
+    confirmAddressButton.click();
+  });
+
+  console.log('"Confirm address" button clicked.');
+
+  await delay(5000);
+
+  await page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll("button"));
+    const confirmPinButton = buttons.find((button) =>
+      button?.textContent?.includes("Confirm pin")
+    );
+    if (!confirmPinButton) {
+      throw Error("Confirm pin button not found.");
+    }
+    console.log('"Confirm pin" button is enabled.');
+    confirmPinButton.click();
+  });
+
+  console.log('"Confirm pin" button clicked.');
+
+  await delay(5000);
+
+  await page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll("button"));
+    const finishButton = buttons.find((button) =>
+      button?.textContent?.includes("Finish")
+    );
+    if (!finishButton) {
+      throw Error("Finish button not found.");
+    }
+    console.log('"Finish" button is enabled.');
+    finishButton.click();
+  });
+
+  console.log('"Finish" button clicked.');
+  await delay(5000);
+
+}
 
 createAccount();
