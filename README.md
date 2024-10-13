@@ -12,7 +12,14 @@ SLACK_TOKEN=
 SLACK_CHANNEL_ID=
 CONSOLE_LOG=false
 CREATE_ADDRESS=false
-ADDRESS_DATA='address_data'
+APARTMENT_AND_FLOOR_NUMBER=
+BLOCK=
+BUILDING_HOUSE_NAME=
+STREET_NUMBER=
+STREET_NAME=
+DISTRICT=
+COORDINATES_X=
+COORDINATES_Y=
 
 ---------------------------------
 
@@ -24,4 +31,4 @@ SLACK_SEND=true
 SLACK_TOKEN= APP既OAuth & Permissions > Bot User OAuth Token
 SLACK_CHANNEL_ID=係slack開返個app 睇detail會搵到Channel ID
 
-ADDRESS_DATA: copy addresses?market=hk 個payload 再stringify 再用 '' 包住佢
+ADDRESS_DATA: copy addresses?market=hk 個payload data 入field
