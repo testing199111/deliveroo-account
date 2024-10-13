@@ -363,9 +363,23 @@ const updateAddress = async (page: any) => {
   page.on('request', (request: any) => {
     if (request.url().endsWith('addresses?market=hk') ) {
         console.log("request url", request.url());
-        console.log("process.env.ADDRESS_DATA", process.env.ADDRESS_DATA);
+        const addressData = {
+          "apartment_floor_number": process.env.APARTMENT_AND_FLOOR_NUMBER,
+          "block": process.env.BLOCK,
+          "building_house_name": process.env.BUILDING_HOUSE_NAME,
+          "street_number": process.env.STREET_NUMBER,
+          "street_name": process.env.STREET_NAME,
+          "district": process.env.DISTRICT,
+          "phone": accountDetails.phoneNumber,
+          "coordinates": [
+            process.env.COORDINATES_X,
+            process.env.COORDINATES_Y
+          ],
+          "country": "HK"
+      };
+        console.log("addressData", addressData);
         request.continue({
-            postData: process.env.ADDRESS_DATA,
+            postData: JSON.stringify(addressData),
         });
     } else {
         request.continue(); // Continue with other requests as normal
