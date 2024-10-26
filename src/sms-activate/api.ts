@@ -4,11 +4,12 @@ dotenv.config();
 const apiKey = process.env.SMS_API_KEY;
 const service = process.env.SMS_SERVICE;
 const country = process.env.SMS_COUNTRY;
+const maxPrice = process.env.SMS_MAX_PRICE || 20;
 
 export const requestPhoneNumber = async () => {
   try {
     const response = await fetch(
-      `https://api.sms-activate.io/stubs/handler_api.php?api_key=${apiKey}&action=getNumber&service=${service}&country=${country}&maxPrice=10`
+      `https://api.sms-activate.io/stubs/handler_api.php?api_key=${apiKey}&action=getNumber&service=${service}&country=${country}&maxPrice=${maxPrice}`
     );
     const responseText = await response.text();
     const [status, id, phoneNumber] = responseText.split(':');
