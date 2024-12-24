@@ -423,7 +423,7 @@ const updateAddress = async (page: any) => {
         console.log("Apartment and floor number entered into the input field.");
   await page.type('input[name="Block"]', "123");
         console.log("Block entered into the input field.");
-  await page.type('input[name="Building or house name"]', "123");
+  await page.type('input[name="Building or house name"]', "Festival City");
         console.log("Building or house name entered into the input field.");
   await page.type('input[name="Street number"]', "123");
         console.log("Street number entered into the input field.");
